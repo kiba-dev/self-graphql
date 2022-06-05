@@ -4,6 +4,7 @@ type Query {
   studentById(id: ID!): Student
   sayHello(name: String!): String
   setFavoriteColor(color: ColorType): String
+  greetingWithAuth: String
 }
 
 type Mutation {

@@ -41,7 +41,14 @@ const Query = {
   students: () => db.students.list(),
   studentById: (root, args, context, info) => db.students.get(args.id),
   sayHello: (root, args, context, info) => `Hi ${args.name} GraphQL server says Hello to you !!`,
-  setFavoriteColor: (root, args, context, info) => "Your favorite color is :" + args.color
+  setFavoriteColor: (root, args, context, info) => "Your favorite color is :" + args.color,
+  greetingWithAuth: (root, args, context, info) => {
+    console.log(context)
+    if (!context.user) {
+      throw new Error('Unauthorized')
+    }
+    return "Hello from GraphQL, welcome back :" + context.user.firstName
+  }
 }
 
 const Student = {
