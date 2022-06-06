@@ -6,7 +6,7 @@ const { expressjwt: expressJwt } = require('express-jwt')
 const jwt = require('jsonwebtoken')
 
 const port = process.env.PORT || 9000;
-const jwtSecret = Buffer.from('Zn8Q5tyZ/G1MHltc4F/gTkVJMlrbKiZt', 'base64')
+const jwtSecret = "sample_secret"
 const app = express();
 
 const fs = require('fs')
@@ -19,11 +19,14 @@ const schema = makeExecutableSchema({ typeDefs, resolvers })
 app.use(cors(), bodyParser.json(), expressJwt({
   secret: jwtSecret,
   credentialsRequired: false,
-  algorithms: ["HS256"]
+  algorithms: ['sha1', 'RS256', 'HS256']
 }));
 
 const { graphiqlExpress, graphqlExpress } = require('apollo-server-express')
-app.use('/graphql', graphqlExpress({ schema }))
+app.use('/graphql', graphqlExpress(req => ({
+  schema,
+  context: { user: req.user && db.students.get(req.user.sub) }
+})))
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
 app.post('/login', (req, res) => {
